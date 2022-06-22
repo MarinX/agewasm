@@ -1,0 +1,275 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta title="Age Tool - Online Age Key Generator Encryption Decryption Tool">
+    <meta name="description"
+        content="A simple and secure online client-side Age key generator, encryption and decryption tool.">
+    <meta name="author" content="Marin Basic (marin-basic.com)">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
+    <script src="wasm_exec.js"></script>
+    <script>
+        const go = new Go();
+        WebAssembly.instantiateStreaming(fetch("age.wasm"), go.importObject).then((result) => {
+            go.run(result.instance);
+        });
+    </script>
+</head>
+
+<body>
+
+   <main>
+    <section class="text-center container">
+        <div class="row py-lg-5">
+            <div class="col-lg-8 col-md-8 mx-auto">
+                <h1 class="fw-light">Age Tool</h1>
+                <p class="text-muted">A simple and secure online client-side Age key generator, encryption and decryption tool.<p>
+                
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="row">
+            
+            <div class="col">
+    
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="keys-tab" data-bs-toggle="tab" data-bs-target="#keys-tab-pane"
+                            type="button" role="tab" aria-controls="keys-tab-pane" aria-selected="true">Keys</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="encrypt-tab" data-bs-toggle="tab" data-bs-target="#encrypt-tab-pane"
+                            type="button" role="tab" aria-controls="encrypt-tab-pane" aria-selected="false">Encrypt</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="decrypt-tab" data-bs-toggle="tab" data-bs-target="#decrypt-tab-pane"
+                            type="button" role="tab" aria-controls="decrypt-tab-pane" aria-selected="false">Decrypt</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="about-tab" data-bs-toggle="tab" data-bs-target="#about-tab-pane"
+                            type="button" role="tab" aria-controls="about-tab-pane" aria-selected="false">About</button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane show active" id="keys-tab-pane" role="tabpanel" aria-labelledby="keys-tab"
+                        tabindex="0">
+    
+                        <form id="generateKeysForm">
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    Private key
+                                </div>
+                                <div class="card-body">
+                                    <textarea class="form-control message" rows="2" name="privkey"
+                                        placeholder="Your public key will be generated here." id="privkey"
+                                        readonly="readonly"></textarea>
+    
+                                </div>
+                            </div>
+    
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    Public key
+                                </div>
+                                <div class="card-body">
+                                    <textarea class="form-control message" rows="2" name="pubkey"
+                                        placeholder="Your private key will be generated here." id="pubkey"
+                                        readonly="readonly"></textarea>
+                                </div>
+                            </div>
+    
+                            <div id="errorKeys"></div>
+    
+                            <div class="d-grid m-2">
+                                <button type="submit" class="btn btn-primary">Generate Keys</button>
+                            </div>
+                        </form>
+    
+    
+                    </div>
+                    <div class="tab-pane" id="encrypt-tab-pane" role="tabpanel" aria-labelledby="encrypt-tab" tabindex="0">
+                        <form id="encryptForm">
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    Public keys
+                                </div>
+                                <div class="card-body">
+                                    <textarea class="form-control message" rows="2" name="recipients"
+                                        placeholder="Recipient key or keys one per line" id="recipients"
+                                        required></textarea>
+    
+                                </div>
+                            </div>
+    
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    Message
+                                </div>
+                                <div class="card-body">
+                                    <textarea class="form-control message" rows="2" name="message"
+                                        placeholder="Message to encrypt" id="message" required></textarea>
+    
+                                </div>
+                            </div>
+    
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    Output
+                                </div>
+                                <div class="card-body">
+                                    <textarea class="form-control message" rows="5" name="encryptedOutput"
+                                        placeholder="Encrypted output will be generated here" id="encryptedOutput"
+                                        readonly></textarea>
+    
+                                </div>
+                            </div>
+    
+                            <div id="errorEncrypt"></div>
+    
+                            <div class="d-grid m-2">
+                                <button type="submit" class="btn btn-primary">Encrypt</a>
+                            </div>
+                        </form>
+    
+                    </div>
+                    <div class="tab-pane" id="decrypt-tab-pane" role="tabpanel" aria-labelledby="decrypt-tab" tabindex="0">
+    
+                        <form id="decryptForm">
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    Private keys
+                                </div>
+                                <div class="card-body">
+                                    <textarea class="form-control message" rows="2" name="identities"
+                                        placeholder="Identitiy key or keys one per line" id="identities"
+                                        required></textarea>
+    
+                                </div>
+                            </div>
+    
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    Encrypted Text
+                                </div>
+                                <div class="card-body">
+                                    <textarea class="form-control message" rows="5" name="encryptedText"
+                                        placeholder="Paste here encrypted text" id="encryptedText" required></textarea>
+    
+                                </div>
+                            </div>
+    
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    Output
+                                </div>
+                                <div class="card-body">
+                                    <textarea class="form-control message" rows="5" name="decryptedOutput"
+                                        placeholder="Decrypted output will be generated here" id="decryptedOutput"
+                                        readonly></textarea>
+    
+                                </div>
+                            </div>
+    
+                            <div id="errorDecrypt"></div>
+    
+                            <div class="d-grid m-2">
+                                <button type="submit" class="btn btn-primary">Decrypt</a>
+                            </div>
+                        </form>
+    
+                    </div>
+                    <div class="tab-pane" id="about-tab-pane" role="tabpanel" aria-labelledby="about-tab" tabindex="0">
+                        <p class="mt-2">
+                            This site provides a simple and easy-to-use open source Age tool for people to generate new Age keys online, encrypt or
+                            decrypt messages.
+                        </p>
+
+                        <p>
+                            Built using Go and WebAssembly.
+                            The Go library <a href="https://github.com/FiloSottile/age" target="_blank">Age</a> is wrapped in a WebAssembly module and all actions are done in browser.
+                        </p>
+
+                        <strong>There is no backend or API calls. Everything is generated on client(browser) side</strong>
+
+                        <p>This site is Open Source and the source code is available on <a href="https://github.com/MarinX/agewasm" target="_blank">GitHub</a>.</p>
+                        
+                    </div>
+                </div>
+    
+            </div>
+        </div>
+    </div>
+   </main>
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
+    <script>
+
+        const alert = (alertPlaceholder, message, type) => {
+                const wrapper = document.createElement('div')
+                wrapper.innerHTML = [
+                    `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+                    `   <div>${message}</div>`,
+                    '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+                    '</div>'
+                ].join('')
+
+                alertPlaceholder.append(wrapper)
+            }
+
+        document.getElementById("generateKeysForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            var pubkey = document.getElementById("pubkey");
+            var privkey = document.getElementById("privkey");
+            var keys = generateX25519Identity();
+            pubkey.value = keys.publicKey;
+            privkey.value = keys.privateKey;
+        });
+
+        document.getElementById("encryptForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            var recipients = document.getElementById("recipients").value;
+            var message = document.getElementById("message").value;
+            var output = document.getElementById("encryptedOutput");
+            output.value = "";
+
+            var result = encrypt(recipients, message);
+
+            if (result.error) {
+                alert(document.getElementById("errorEncrypt"), result.error, "danger");
+            } else {
+                output.value = result.output;
+            }
+        
+        })
+
+        document.getElementById("decryptForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            var identities = document.getElementById("identities").value;
+            var encryptedText = document.getElementById("encryptedText").value;
+            var output = document.getElementById("decryptedOutput");
+            output.value = '';
+
+            var result = decrypt(identities, encryptedText);
+            if(result.error) {
+                alert(document.getElementById("errorDecrypt"), result.error, "danger");
+            }else {
+                output.value = result.output;
+            }
+        })
+
+       
+
+    </script>
+</body>
+
+</html>
