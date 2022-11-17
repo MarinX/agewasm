@@ -8,5 +8,8 @@ import:
 build:
 	GOOS=js GOARCH=wasm go build -o static/age.wasm
 
+zip:
+	cd static && zip -r ../agewasm.zip .
+
 deploy-gcp:
 	gcloud app deploy
