@@ -184,7 +184,11 @@
                             <div id="errorEncryptBinary"></div>
     
                             <div class="d-grid m-2">
-                                <button type="submit" class="btn btn-primary">Encrypt Binary</a>
+                                <button type="submit" class="btn btn-primary">
+                                    <span class="spinner-border spinner-border-sm hide" role="status" aria-hidden="true" hidden></span> 
+                                    <span class="sr-only">Encrypt Binary</span>
+                                </button>
+                                
                             </div>
                         </form>
     
@@ -274,7 +278,10 @@
                             <div id="errorDecryptBinary"></div>
     
                             <div class="d-grid m-2">
-                                <button type="submit" class="btn btn-primary">Decrypt</a>
+                                <button type="submit" class="btn btn-primary">
+                                    <span class="spinner-border spinner-border-sm hide" role="status" aria-hidden="true" hidden></span> 
+                                    <span class="sr-only">Decrypt Binary</span>
+                                </button>
                             </div>
                         </form>
     
@@ -339,6 +346,20 @@
             setTimeout(() => window.URL.revokeObjectURL(url), 1000)
         }
 
+        const showWorking = (element) => {
+            element.classList.add("disabled");
+            if(element.firstElementChild) {
+                element.firstElementChild.removeAttribute("hidden");
+            }
+        }
+
+        const hideWorking = (element) => {
+            element.classList.remove("disabled");
+            if(element.firstElementChild) {
+                element.firstElementChild.setAttribute("hidden", true);
+            }
+        }
+
         document.getElementById("generateKeysForm").addEventListener("submit", function(e) {
             e.preventDefault();
             let pubkey = document.getElementById("pubkey");
@@ -375,17 +396,19 @@
             }
             for (const f of file.files) {
                 console.log(`Processing ${f.name}...`);
+                showWorking(e.submitter);
                 const reader = new FileReader();
                 reader.onload = function() {
                     const buffer = new Uint8Array(reader.result);
                     const result = encryptBinary(recipients, buffer);
                     if(typeof result === "string") {
                         alert(document.getElementById("errorEncryptBinary"), result, "danger");
-                        return;
+                    }else {
+                        const fileName = f.name + ".age";
+                        console.log(`Encrypted ${fileName}`);
+                        downloadBlob(result, `${fileName}`);
                     }
-                    const fileName = f.name + ".age";
-                    console.log(`Encrypted ${fileName}`);
-                    downloadBlob(result, `${fileName}`);
+                    hideWorking(e.submitter)
                 }
                 reader.readAsArrayBuffer(f);
             }         
@@ -419,15 +442,19 @@
                 console.log(`Processing ${f.name}...`);
                 const reader = new FileReader();
                 reader.onload = function() {
+                    showWorking(e.submitter);
+
                     const buffer = new Uint8Array(reader.result);
                     const result = decryptBinary(identities, buffer);
                     if(typeof result === "string") {
                         alert(document.getElementById("errorDecryptBinary"), result, "danger");
                         return;
+                    } else {
+                        const fileName = f.name.replace(".age", "");
+                        console.log(`Decrypted ${fileName}`);
+                        downloadBlob(result, `${fileName}`);
                     }
-                    const fileName = f.name.replace(".age", "");
-                    console.log(`Decrypted ${fileName}`);
-                    downloadBlob(result, `${fileName}`);
+                    hideWorking(e.submitter);
                 }
                 reader.readAsArrayBuffer(f);
             }  
