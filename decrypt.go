@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"fmt"
 	"io"
 	"strings"
 	"syscall/js"
@@ -11,6 +12,7 @@ import (
 	"filippo.io/age/armor"
 )
 
+// Decrypt decrypts a Armored string into a string result
 func Decrypt(this js.Value, args []js.Value) interface{} {
 	output := make(map[string]interface{})
 	if len(args) != 2 {
@@ -32,6 +34,32 @@ func Decrypt(this js.Value, args []js.Value) interface{} {
 	}
 	output["output"] = buff.String()
 	return output
+}
+
+// DecryptBinary decrypts binary data (Uint8Array) into a Uint8Array result
+func DecryptBinary(this js.Value, args []js.Value) interface{} {
+	if len(args) != 2 {
+		return fmt.Errorf("invalid arguments. expected: identities, input")
+	}
+	var identities = args[0].String()
+
+	ids, err := age.ParseIdentities(strings.NewReader(identities))
+	if err != nil {
+		return err.Error()
+	}
+
+	input := make([]byte, args[1].Length())
+	js.CopyBytesToGo(input, args[1])
+
+	buff := bytes.NewBuffer(nil)
+	err = decrypt(ids, bytes.NewReader(input), buff)
+	if err != nil {
+		return err.Error()
+	}
+
+	result := js.Global().Get("Uint8Array").New(buff.Len())
+	js.CopyBytesToJS(result, buff.Bytes())
+	return result
 }
 
 // decrypt internal helper
