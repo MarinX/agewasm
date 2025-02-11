@@ -6,13 +6,19 @@ View online [here](https://age-wasm.ey.r.appspot.com/)
 
 ## Building
 
+You will need:
+- [Go](https://go.dev/) and `wasm_exec.js` (included with Go)
+- [PNPM](https://pnpm.io/)
+
 Use the provided `Makefile` and execute `make build`.
 
-The wasm-related build files will be in `vendor/` while the output static website will be in `dist/`.
+See `make help` for descriptions of  other targets.
+
+The final static website will be placed in `dist/`
 
 ## Usage
 
-Put the dist folder on your favorite web server server or open `index.html`.
+Put the `dist` folder on your favorite web server server or open `index.html`.
 There is no binary to run :)
 
 ---
