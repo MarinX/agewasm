@@ -29,6 +29,11 @@ You can grab a generated zip file on the [release page](https://github.com/Marin
 
 ---
 
+## Developement
+You can run a developement Vite server with live-reload using `pnpm run dev` (this will not auto-rebuild the WASM).
+
+Please format the source files before commiting with `pnpm run format`
+
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for the full license text.
