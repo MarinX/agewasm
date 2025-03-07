@@ -1,0 +1,26 @@
+{
+  "name": "agewasm",
+  "version": "1.1.0",
+  "description": "A simple and secure online client-side Age key generator, encryption and decryption tool built using wasm.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build --emptyOutDir",
+    "preview": "vite preview",
+    "format": "prettier --write src/*.html src/*.js src/*.scss"
+  },
+  "keywords": [
+    "encryption",
+    "age-encryption"
+  ],
+  "author": "Marin Basic (marin-basic.com)",
+  "license": "MIT",
+  "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "bootstrap": "^5.3.3"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.0",
+    "sass-embedded": "^1.83.4",
+    "vite": "^6.1.0"
+  }
+}
