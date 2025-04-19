@@ -19,9 +19,9 @@ GOROOT:=$(shell go env GOROOT)
 # make import: copy the required wasm_exec.js file from the Go toolchain (output in vendor/)
 import = vendor/wasm_exec.js
 
-$(import): $(GOROOT)/lib/wasm/wasm_exec.js
+$(import): $(GOROOT)/misc/wasm/wasm_exec.js
 	mkdir -p vendor
-	cp "$(GOROOT)/lib/wasm/wasm_exec.js" vendor/
+	cp "$(GOROOT)/misc/wasm/wasm_exec.js" vendor/
 
 import: $(import)
 
