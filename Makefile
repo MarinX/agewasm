@@ -21,7 +21,7 @@ GOROOT:=$(shell go env GOROOT)
 # Variables
 IMPORT = vendor/wasm_exec.js
 
-GO_VERSION := $(shell go env GOVERSION)
+GO_VERSION := $(shell go env GOVERSION | sed 's/^go//')
 GO_MAJOR := $(shell echo $(GO_VERSION) | cut -d. -f1)
 GO_MINOR := $(shell echo $(GO_VERSION) | cut -d. -f2)
 
@@ -33,8 +33,8 @@ endif
 
 # Rule to copy wasm_exec.js into vendor
 $(IMPORT): $(WASM_EXEC_PATH)
-        mkdir -p vendor
-        cp "$(WASM_EXEC_PATH)" vendor/
+	mkdir -p vendor
+	cp "$(WASM_EXEC_PATH)" vendor/
 
 # import target depends on the file
 import: $(IMPORT)
