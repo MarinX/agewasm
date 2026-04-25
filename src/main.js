@@ -175,3 +175,18 @@ document
       reader.readAsArrayBuffer(f);
     }
   });
+
+document.addEventListener("DOMContentLoaded", function() {
+  const params = new URLSearchParams(window.location.search);
+  const pubkey = params.get("pubkey");
+  if (pubkey) {
+    const encTab = document.getElementById("encrypt-tab");
+    const reciText = document.getElementById("recipients");
+    const reciBin = document.getElementById("recipients-binary");
+    const message = document.getElementById("message");
+    encTab.click();
+    reciText.value = pubkey.replaceAll(",", "\n");
+    reciBin.value = pubkey.replaceAll(",", "\n");
+    message.focus();
+  }
+});
