@@ -62,9 +62,12 @@ document
     e.preventDefault();
     let pubkey = document.getElementById("pubkey");
     let privkey = document.getElementById("privkey");
+    let pubshare = document.getElementById("pubkey-share");
     const keys = generateX25519Identity();
     pubkey.value = keys.publicKey;
     privkey.value = keys.privateKey;
+    pubshare.removeAttribute("hidden");
+    pubshare.setAttribute("href", `/?pubkey=${keys.publicKey}`);
   });
 
 document.getElementById("encryptForm").addEventListener("submit", function (e) {
