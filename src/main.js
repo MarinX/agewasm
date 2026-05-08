@@ -62,9 +62,12 @@ document
     e.preventDefault();
     let pubkey = document.getElementById("pubkey");
     let privkey = document.getElementById("privkey");
+    let pubshare = document.getElementById("pubkey-share");
     const keys = generateX25519Identity();
     pubkey.value = keys.publicKey;
     privkey.value = keys.privateKey;
+    pubshare.removeAttribute("hidden");
+    pubshare.setAttribute("href", `/?pubkey=${keys.publicKey}`);
   });
 
 document.getElementById("encryptForm").addEventListener("submit", function (e) {
@@ -175,3 +178,18 @@ document
       reader.readAsArrayBuffer(f);
     }
   });
+
+document.addEventListener("DOMContentLoaded", function() {
+  const params = new URLSearchParams(window.location.search);
+  const pubkey = params.get("pubkey");
+  if (pubkey) {
+    const encTab = document.getElementById("encrypt-tab");
+    const reciText = document.getElementById("recipients");
+    const reciBin = document.getElementById("recipients-binary");
+    const message = document.getElementById("message");
+    encTab.click();
+    reciText.value = pubkey.replaceAll(",", "\n");
+    reciBin.value = pubkey.replaceAll(",", "\n");
+    message.focus();
+  }
+});
