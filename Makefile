@@ -77,6 +77,7 @@ clean:
 # make zip: create a zip archive with the output static website (outputs agewasm.zip)
 zip = agewasm.zip
 $(zip): $(build)
+	rm -f $(zip)
 	cd dist && zip -r ../$(zip) .
 zip: $(zip)
 
