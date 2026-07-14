@@ -5,9 +5,34 @@ import "bootstrap";
 import "../vendor/wasm_exec.js";
 import ageWasmUrl from "../vendor/age.wasm?url";
 const go = new Go();
+
+const buttonData = [];
+
+const setLoadingButton = (btnId) => {
+  const domBtn = document.getElementById(btnId);
+  buttonData.push({ id: btnId, inner: domBtn.innerHTML });
+  domBtn.setAttribute("disabled", "disabled");
+  domBtn.innerText = "Loading WASM Module...";
+};
+
+const ids = [
+  "genKeysBtn",
+  "encryptBtn",
+  "encryptBinBtn",
+  "decryptBtn",
+  "decryptBinBtn",
+];
+ids.forEach((id) => setLoadingButton(id));
+
 WebAssembly.instantiateStreaming(fetch(ageWasmUrl), go.importObject).then(
   (result) => {
     go.run(result.instance);
+    // restore buttons after module is done loading
+    buttonData.forEach((btn) => {
+      const domBtn = document.getElementById(btn.id);
+      domBtn.removeAttribute("disabled");
+      domBtn.innerHTML = btn.inner;
+    });
   },
 );
 
@@ -179,7 +204,7 @@ document
     }
   });
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   const params = new URLSearchParams(window.location.search);
   const pubkey = params.get("pubkey");
   if (pubkey) {
