@@ -1,3 +1,13 @@
 @use "bootstrap/scss/bootstrap" with (
   $color-mode-type: media-query
 );
+
+.wasm-init {
+  font-size: 0;
+}
+
+.wasm-init::after {
+  content: "Loading WASM Module...";
+  font-size: 16px;
+  font-style: italic;
+}

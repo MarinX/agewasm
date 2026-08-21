@@ -5,9 +5,15 @@ import "bootstrap";
 import "../vendor/wasm_exec.js";
 import ageWasmUrl from "../vendor/age.wasm?url";
 const go = new Go();
+
 WebAssembly.instantiateStreaming(fetch(ageWasmUrl), go.importObject).then(
   (result) => {
     go.run(result.instance);
+    // restore buttons after module is done loading
+    document.querySelectorAll(".wasm-init").forEach((el) => {
+      el.removeAttribute("disabled");
+      el.classList.remove("wasm-init");
+    });
   },
 );
 
@@ -179,7 +185,7 @@ document
     }
   });
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   const params = new URLSearchParams(window.location.search);
   const pubkey = params.get("pubkey");
   if (pubkey) {
