@@ -59,6 +59,54 @@ func EncryptBinary(this js.Value, args []js.Value) interface{} {
 	return result
 }
 
+// EncryptWithPassword encrypts a string using a password (scrypt) instead of recipient keys
+func EncryptWithPassword(this js.Value, args []js.Value) interface{} {
+	output := make(map[string]interface{})
+	if len(args) != 2 {
+		output["error"] = "invalid arguments. expected: password, input"
+		return output
+	}
+	var password = args[0].String()
+	var input = args[1].String()
+	r, err := age.NewScryptRecipient(password)
+	if err != nil {
+		output["error"] = err.Error()
+		return output
+	}
+	buff := bytes.NewBuffer(nil)
+	if err := encrypt([]age.Recipient{r}, strings.NewReader(input), buff, true); err != nil {
+		output["error"] = err.Error()
+		return output
+	}
+	output["output"] = buff.String()
+	return output
+}
+
+// EncryptBinaryWithPassword encrypts binary data using a password (scrypt) instead of recipient keys
+func EncryptBinaryWithPassword(this js.Value, args []js.Value) interface{} {
+	if len(args) != 2 {
+		return fmt.Errorf("invalid arguments. expected: password, input")
+	}
+
+	var password = args[0].String()
+	r, err := age.NewScryptRecipient(password)
+	if err != nil {
+		return err.Error()
+	}
+
+	input := make([]byte, args[1].Length())
+	js.CopyBytesToGo(input, args[1])
+
+	buff := bytes.NewBuffer(nil)
+	if err := encrypt([]age.Recipient{r}, bytes.NewReader(input), buff, false); err != nil {
+		return err.Error()
+	}
+
+	result := js.Global().Get("Uint8Array").New(buff.Len())
+	js.CopyBytesToJS(result, buff.Bytes())
+	return result
+}
+
 // encrypt internal helper
 func encrypt(recipients []age.Recipient, in io.Reader, out io.Writer, withArmor bool) error {
 	var a io.WriteCloser
