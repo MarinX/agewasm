@@ -62,6 +62,53 @@ func DecryptBinary(this js.Value, args []js.Value) interface{} {
 	return result
 }
 
+// DecryptWithPassword decrypts a string using a password (scrypt) instead of identity keys
+func DecryptWithPassword(this js.Value, args []js.Value) interface{} {
+	output := make(map[string]interface{})
+	if len(args) != 2 {
+		output["error"] = "invalid arguments. expected: password, input"
+		return output
+	}
+	var password = args[0].String()
+	var input = args[1].String()
+	id, err := age.NewScryptIdentity(password)
+	if err != nil {
+		output["error"] = err.Error()
+		return output
+	}
+	buff := bytes.NewBuffer(nil)
+	if err := decrypt([]age.Identity{id}, strings.NewReader(input), buff); err != nil {
+		output["error"] = err.Error()
+		return output
+	}
+	output["output"] = buff.String()
+	return output
+}
+
+// DecryptBinaryWithPassword decrypts binary data using a password (scrypt) instead of identity keys
+func DecryptBinaryWithPassword(this js.Value, args []js.Value) interface{} {
+	if len(args) != 2 {
+		return fmt.Errorf("invalid arguments. expected: password, input")
+	}
+	var password = args[0].String()
+	id, err := age.NewScryptIdentity(password)
+	if err != nil {
+		return err.Error()
+	}
+
+	input := make([]byte, args[1].Length())
+	js.CopyBytesToGo(input, args[1])
+
+	buff := bytes.NewBuffer(nil)
+	if err := decrypt([]age.Identity{id}, bytes.NewReader(input), buff); err != nil {
+		return err.Error()
+	}
+
+	result := js.Global().Get("Uint8Array").New(buff.Len())
+	js.CopyBytesToJS(result, buff.Bytes())
+	return result
+}
+
 // decrypt internal helper
 func decrypt(keys []age.Identity, in io.Reader, out io.Writer) error {
 	rr := bufio.NewReader(in)
