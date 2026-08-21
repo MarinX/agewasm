@@ -148,7 +148,17 @@
                   </div>
 
                   <div class="card mb-3">
-                    <div class="card-header">Public key <a id="pubkey-share" title="Shareable link (supports multiple comma-separated keys)" class="text-decoration-none" target="_blank" hidden="true">&nbsp;&#x1F517;</a></div>
+                    <div class="card-header">
+                      Public key
+                      <a
+                        id="pubkey-share"
+                        title="Shareable link (supports multiple comma-separated keys)"
+                        class="text-decoration-none"
+                        target="_blank"
+                        hidden="true"
+                        >&nbsp;&#x1F517;</a
+                      >
+                    </div>
                     <div class="card-body">
                       <textarea
                         class="form-control message"
@@ -180,7 +190,36 @@
               >
                 <form id="encryptForm">
                   <div class="card mb-3">
-                    <div class="card-header">Public keys</div>
+                    <div
+                      class="card-header d-flex justify-content-between align-items-center"
+                    >
+                      <span>Recipients</span>
+                      <div class="btn-group btn-group-sm" role="group">
+                        <input
+                          type="radio"
+                          class="btn-check"
+                          name="encMode"
+                          id="encModeKey"
+                          checked
+                        />
+                        <label
+                          class="btn btn-outline-secondary"
+                          for="encModeKey"
+                          >Key</label
+                        >
+                        <input
+                          type="radio"
+                          class="btn-check"
+                          name="encMode"
+                          id="encModePassword"
+                        />
+                        <label
+                          class="btn btn-outline-secondary"
+                          for="encModePassword"
+                          >Password</label
+                        >
+                      </div>
+                    </div>
                     <div class="card-body">
                       <textarea
                         class="form-control message"
@@ -190,6 +229,20 @@
                         id="recipients"
                         required
                       ></textarea>
+                      <div id="passwordWrap" hidden>
+                        <input
+                          type="password"
+                          class="form-control mb-2"
+                          placeholder="Password"
+                          id="password"
+                        />
+                        <input
+                          type="password"
+                          class="form-control"
+                          placeholder="Confirm password"
+                          id="passwordConfirm"
+                        />
+                      </div>
                     </div>
                   </div>
 
@@ -241,7 +294,36 @@
               >
                 <form id="encryptBinaryForm">
                   <div class="card mb-3">
-                    <div class="card-header">Public keys</div>
+                    <div
+                      class="card-header d-flex justify-content-between align-items-center"
+                    >
+                      <span>Recipients</span>
+                      <div class="btn-group btn-group-sm" role="group">
+                        <input
+                          type="radio"
+                          class="btn-check"
+                          name="encModeBinary"
+                          id="encModeKeyBinary"
+                          checked
+                        />
+                        <label
+                          class="btn btn-outline-secondary"
+                          for="encModeKeyBinary"
+                          >Key</label
+                        >
+                        <input
+                          type="radio"
+                          class="btn-check"
+                          name="encModeBinary"
+                          id="encModePasswordBinary"
+                        />
+                        <label
+                          class="btn btn-outline-secondary"
+                          for="encModePasswordBinary"
+                          >Password</label
+                        >
+                      </div>
+                    </div>
                     <div class="card-body">
                       <textarea
                         class="form-control message"
@@ -251,6 +333,20 @@
                         id="recipients-binary"
                         required
                       ></textarea>
+                      <div id="passwordWrapBinary" hidden>
+                        <input
+                          type="password"
+                          class="form-control mb-2"
+                          placeholder="Password"
+                          id="password-binary"
+                        />
+                        <input
+                          type="password"
+                          class="form-control"
+                          placeholder="Confirm password"
+                          id="passwordConfirm-binary"
+                        />
+                      </div>
                     </div>
                   </div>
 
@@ -299,16 +395,29 @@
               >
                 <form id="decryptForm">
                   <div class="card mb-3">
-                    <div class="card-header">Private keys</div>
+                    <div class="card-header" id="decryptSecretLabel">
+                      Decryption secret
+                    </div>
                     <div class="card-body">
+                      <p class="text-muted mb-0" id="decryptModeNote">
+                        Paste your encrypted text and we'll figure out
+                        whether you need a key or a password.
+                      </p>
                       <textarea
                         class="form-control message"
                         rows="2"
                         name="identities"
                         placeholder="Identitiy key or keys one per line"
                         id="identities"
-                        required
+                        hidden
                       ></textarea>
+                      <input
+                        type="password"
+                        class="form-control"
+                        placeholder="Password"
+                        id="decPassword"
+                        hidden
+                      />
                     </div>
                   </div>
 
@@ -360,16 +469,29 @@
               >
                 <form id="decryptBinaryForm">
                   <div class="card mb-3">
-                    <div class="card-header">Private keys</div>
+                    <div class="card-header" id="decryptBinarySecretLabel">
+                      Decryption secret
+                    </div>
                     <div class="card-body">
+                      <p class="text-muted mb-0" id="decryptBinaryModeNote">
+                        Add your encrypted file and we'll figure out whether
+                        you need a key or a password.
+                      </p>
                       <textarea
                         class="form-control message"
                         rows="2"
                         name="identities-binary"
                         placeholder="Identitiy key or keys one per line"
                         id="identities-binary"
-                        required
+                        hidden
                       ></textarea>
+                      <input
+                        type="password"
+                        class="form-control"
+                        placeholder="Password"
+                        id="decPassword-binary"
+                        hidden
+                      />
                     </div>
                   </div>
 
